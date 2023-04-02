@@ -26,8 +26,18 @@ def home(request):
     topics=Topic.objects.all()
     
     room_count=room.count()
-    context={'rooms':room,'topics':topics,'room_count':room_count}
+    chatboxes=Message.objects.filter(Q(room__Topic__name__icontains=k)).order_by("-created")
+    context={'rooms':room,'topics':topics,'room_count':room_count,'chatboxes':chatboxes}
     return render(request,'shazam/home.html',context)
+def profile_page(request,pk):
+    users=User.objects.get(id=pk)
+    rooms=users.room_set.all()
+    chatboxes=users.message_set.all()
+    topics=Topic.objects.all()
+    context={'users':users,'rooms':rooms,'chatboxes':chatboxes,'topics':topics}
+    return render (request,'shazam/profile_page.html',context)
+
+
 def room(request,pk):
     room=Room.objects.get(id=pk)
     chatboxes=room.message_set.all().order_by('-updated')
@@ -73,6 +83,14 @@ def delete(request,pk):
         return HttpResponse("you are not allowed")
     delete.delete()
     return redirect('/')
+@login_required(login_url='login_page')
+def deletemsg(request,pk):
+    chatroom=Message.objects.get(id=pk)
+    if request.user!=chatroom.user:
+        return HttpResponse("you are not allowed")
+    chatroom.delete()
+    return redirect('/')
+
 def login_page(request):
     page="login"
     if request.method=="POST":

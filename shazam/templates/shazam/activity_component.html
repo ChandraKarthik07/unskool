@@ -1,0 +1,14 @@
+<div>
+    <h3>Recent activity</h3>
+    {% for chatbox in chatboxes %}
+    <div>
+        {% if  request.user == chatbox.user%}
+        <a href={% url 'deletemsg' chatbox.id%}>delete</a>
+        {% endif %}
+        <span>@<a href={% url 'profile_page' chatbox.user.id %}>{{chatbox.user}}</a> replied at {{chatbox.created|timesince}}to {{chatbox.room}}</span>
+        <br>
+        <span>{{chatbox.body}}</span>
+        <hr>
+    </div>
+    {% endfor %}
+</div>

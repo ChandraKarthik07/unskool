@@ -7,43 +7,16 @@
     <style>
         .home-container{
             display:grid;
-            grid-template-columns:1fr 3fr;
+            grid-template-columns:1fr 3fr 1fr;
         }
     </style>
     <div class="home-container">
-        <div>
-            <h1>Browse topics</h1>
-            <hr>
-            <a href="{% url 'home'%}">ALL</a>
-            <hr>
-                {% for topic in topics%}
-                <a href="{% url 'home'%}?q={{topic.name}}">{{topic.name}}</a>
-                <hr>
-                {%endfor%}
-            
-        </div>
-        <div>
-            <span><a href="{% url 'createroom' %}">create</a></span>
-            <div>
-                <span>{{room_count}} room available<span>
-                {% for room in rooms %}
-                <div>
-                    {% if request.user == room.Host %}
-                    <a href="{% url 'updateroom' room.id%}">updateroom </a>
-                    <br>
-                    <a href="{% url 'delete' room.id%}">delete </a>
-                    <br>
-                    {% endif %}
-                    
-                    <span>@{{room.Host.username}}</span>
-                    <h1>{{room.id}} --<a href=" {%url 'room' room.id%} ">{{room.name}}</a></h1>
-                    <h1>{{room.description}}</h1>
-                    <small>{{room.Topic}}</small><hr>
-                </div>
-                {% endfor%}
-            </div>
-        </div>
+            {% include 'shazam/topic component.html' %}        
 
+            
+    
+        {% include 'shazam/room_component.html'%}
+    {% include 'shazam/activity_component.html' %}        
     </div>
 
         

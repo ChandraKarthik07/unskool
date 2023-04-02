@@ -17,6 +17,9 @@
     {{rooms.name}}
     {% for chatbox in chatboxes %}
     <div>
+        {% if request.user == chatbox.user %}
+        <a href={% url 'deletemsg' chatbox.id%}>deletemsg</a>
+        {% endif %}
     <small>{{chatbox.body}}<br>{{chatbox.user}} created at {{chatbox.created|timesince}}</small>
     <hr>
     </div>
