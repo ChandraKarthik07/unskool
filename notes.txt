@@ -1,0 +1,24 @@
+room=Room.objects.filter(Topic__name__icontains=k)
+The code room=Room.objects.filter(Topic__name__icontains=k) is similar to the previous code, but it uses the icontains lookup type instead of contains.
+
+Here's how it works:
+
+Room.objects gets a queryset of all Room objects in the database.
+filter() is a method that filters the queryset based on certain conditions. The condition here is Topic__name__icontains=k, which means that we want to filter the Room objects based on whether their related Topic object's name field contains the string k, case-insensitively.
+Topic is a related model to the Room model, and the __ syntax is used to traverse the relationship. So Topic__name means we want to access the name field of the related Topic object.
+icontains is a lookup type that checks whether the left-hand side contains the right-hand side, case-insensitively. So Topic__name__icontains=k means we want to filter the Room objects where their related Topic object's name field contains the string k, case-insensitively.
+Overall, this code will return a queryset of all Room objects whose related Topic object's name field contains the string k, case-insensitively.
+--------
+
+the main difference between <pk> and endpoint queery set is:
+ if we want to get same table  data by indexiwe can use <pk> with that index we can return specic index table
+but we want to return one table by another table date we use queryset
+and in forms for post we define crsf token for get method we dont
+andn in forms example
+<form method="GET" action={% url 'home'%}>
+    <input type="text"name="q" placeholder="search rooms">
+</form> here the input data pf form willbe redireccted to url with name added to above url like this {% url 'home'%}?q=''
+ ____________
+
+from django.db.models import Q
+for query filters (and or) instead of passing all arguments in filter parameter
