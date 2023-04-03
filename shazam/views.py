@@ -81,9 +81,9 @@ def updateroom(request,pk):
         room.Topic=topic
         room.description=request.POST.get('description')
         room.save()
-        return redirect('home')
+        return redirect('/')
             
-    return render(request,'shazam/updateroom.html',{'room':room})
+    return render(request,'shazam/roomform.html',{'room':room})
 @login_required(login_url='login_page')
 
 def delete(request,pk):
