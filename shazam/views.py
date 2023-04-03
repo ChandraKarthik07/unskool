@@ -50,17 +50,23 @@ def room(request,pk):
                                     )
         return redirect('room',pk=room.id)
     room.participants.add(request.user)
-    context={'chatboxes':chatboxes,'rooms':room,'participants':participants}
+    context={'chatboxes':chatboxes,'room':room,'participants':participants}
     return render(request,'shazam/room.html',context)
 @login_required(login_url='login_page')
 def createroom(request):
     room=Roomform()
+    topics=Topic.objects.all()
     if request.method == "POST":
-        room=Roomform(request.POST)
-        if room.is_valid:
-            room.save()
-        return redirect ('/')
-    return render(request,'shazam/roomform.html',{'form':room})
+        topic_name=request.POST.get('topic')
+        topic,created=Topic.objects.get_or_create(name=topic_name)
+        Room.objects.create(
+            Host=request.user,
+            Topic=topic,
+            name=request.POST.get('name'),
+            description=request.POST.get('description'),
+        )
+        return redirect('/')
+    return render(request,'shazam/roomform.html',{'form':room,'topics':topics})
 @login_required(login_url='login_page')
 
 def updateroom(request,pk):
@@ -69,10 +75,13 @@ def updateroom(request,pk):
     if request.user!=update.Host:
         return HttpResponse("you are not allowed")
     if request.method=="POST":
-        room=Roomform(request.POST,instance=update)
-        if room.is_valid():
-            room.save()
-            return redirect('home')
+        topic_name=request.POST.get('topic')
+        topic,created=Topic.objects.get_or_create(name=topic_name)
+        room.name=request.POST.get('name')
+        room.Topic=topic
+        room.description=request.POST.get('description')
+        room.save()
+        return redirect('home')
             
     return render(request,'shazam/updateroom.html',{'room':room})
 @login_required(login_url='login_page')

@@ -1,0 +1,25 @@
+{% extends 'main.html' %}
+{% block content %}
+    <h1>
+        welcome to rooms
+    </h1>
+    <hr>
+    <style>
+        .home-container{
+            display:grid;
+            grid-template-columns:1fr 3fr 1fr;
+        }
+    </style>
+    <div class="home-container">
+            {% include 'shazam/topic component.html' %}        
+
+            
+    
+        {% include 'shazam/room_component.html'%}
+    {% include 'shazam/activity_component.html' %}        
+    </div>
+
+        
+ 
+    
+{% endblock content %}

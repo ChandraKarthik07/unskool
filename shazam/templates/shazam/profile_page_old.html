@@ -1,0 +1,20 @@
+{% extends 'main.html' %}
+{% block content %}
+<style>
+    .profile-container{
+        display:grid;
+        grid-template-columns:1fr 3fr 1fr;
+    }
+</style>
+<div class="profile-container">
+<div>
+<h1>{{users.username}}</h1>
+{% include 'shazam/topic component.html' %}        
+</div>
+        {% include 'shazam/room_component.html' %}        
+
+         {% include 'shazam/activity_component.html' %}        
+
+
+</div>
+{% endblock content %}

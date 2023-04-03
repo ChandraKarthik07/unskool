@@ -1,0 +1,52 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+    <style>
+        .room-container{
+            display:grid;
+            grid-template-columns:3fr 1fr;
+        }
+    </style>
+<div class="room-container">
+   <div>
+    <h1>{{room.name}}</h1>
+    <p>{{room.description}}
+        
+    <div class="comment-wrapper">
+    {{rooms.name}}
+    {% for chatbox in chatboxes %}
+    <div>
+        {% if request.user == chatbox.user %}
+        <a href={% url 'deletemsg' chatbox.id%}>deletemsg</a>
+        {% endif %}
+    <small>{{chatbox.body}}<br>{{chatbox.user}} created at {{chatbox.created|timesince}}</small>
+    <hr>
+    </div>
+    {% endfor %}
+    </div>
+
+    {% if request.user.is_authenticated %}
+    <div class="comment-form">
+        <form method="POST",action="">
+            {% csrf_token %}
+            <input type="text" name="body" placeholder="write message"/>
+        </form>
+    </div>
+    {% endif %}
+    </div>
+    <div>
+        <h1>participants</h1>
+        <hr>
+        
+        {% for participant in participants %}
+        <div>
+        <span> @{{ participant}}</span>
+        </div>
+        {% endfor %}
+        
+    </div>
+
+
+</div>
+{% endblock content %}
