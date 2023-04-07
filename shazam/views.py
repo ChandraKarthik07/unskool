@@ -6,7 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
-from .forms import Roomform
+from .forms import Roomform,updateuser
 from django.db.models import Q
 
 # Create your views here.
@@ -23,7 +23,7 @@ def home(request):
                              Q(name__icontains=k)|
                              Q(description__icontains=k)
                              ).order_by('-updated')
-    topics=Topic.objects.all()
+    topics=Topic.objects.all()[0:5]
     
     room_count=room.count()
     chatboxes=Message.objects.filter(Q(room__Topic__name__icontains=k)).order_by("-created")
@@ -37,7 +37,7 @@ def profile_page(request,pk):
     context={'users':users,'rooms':rooms,'chatboxes':chatboxes,'topics':topics}
     return render (request,'shazam/profile_page.html',context)
 
-
+@login_required(login_url='login_page')
 def room(request,pk):
     room=Room.objects.get(id=pk)
     chatboxes=room.message_set.all().order_by('-updated')
@@ -49,7 +49,8 @@ def room(request,pk):
                                     
                                     )
         return redirect('room',pk=room.id)
-    room.participants.add(request.user)
+    if request.user!=None:
+        room.participants.add(request.user)
     context={'chatboxes':chatboxes,'room':room,'participants':participants}
     return render(request,'shazam/room.html',context)
 @login_required(login_url='login_page')
@@ -91,15 +92,20 @@ def delete(request,pk):
     delete=Room.objects.get(id=pk)
     if request.user != delete.Host:
         return HttpResponse("you are not allowed")
-    delete.delete()
-    return redirect('/')
+    if request.method == 'POST':
+        delete.delete()
+        return redirect('home')
+    return render(request,'shazam/delete.html',{'obj':delete})
 @login_required(login_url='login_page')
 def deletemsg(request,pk):
     chatroom=Message.objects.get(id=pk)
     if request.user!=chatroom.user:
         return HttpResponse("you are not allowed")
-    chatroom.delete()
-    return redirect('/')
+    if request.method == 'POST':
+        chatroom.delete()
+        return redirect('home')
+  
+    return render(request,'shazam/delete.html',{'obj':chatroom})
 
 def login_page(request):
     page="login"
@@ -127,12 +133,12 @@ def logout_page(request):
     logout(request)
     return redirect('/')
 def signup(request):
-    register=UserCreationForm()
+    form=UserCreationForm()
     if request.method=="POST":
         #register=UserCreationForm(commit=False)
         register=UserCreationForm(request.POST)
         if register.is_valid():
-            user=register.save(commit=False)
+            user=form.save(commit=False)
             user.username=user.username.lower()
             user.save()
             login(request,user)
@@ -140,5 +146,30 @@ def signup(request):
             return redirect('home')
         else:
             messages.error(request,"please register with valid details")
-    context={'register':register}
+    context={'form':form}
     return render(request,'shazam/login_page.html',context)
+@login_required(login_url='login_page')
+def updateUser(request):
+    user=request.user
+    form= updateuser(instance=user)
+    if request.method == 'POST':
+        form=updateuser(request.POST,instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile_page',pk=user.id)
+        
+    return render(request,'shazam/update-user.html',{'form':form})
+def topics(request):
+    k=request.GET.get("q") if request.GET.get('q')!=None else ''
+
+    topics=Topic.objects.filter(
+                             Q(name__icontains=k)
+                             
+                             )
+    return render(request,'shazam/topics.html',{'topics':topics})
+def activity(request):
+    chatboxes=Message.objects.all()
+    return render(request,'shazam/activity.html',{'chatboxes':chatboxes})
+
+def more(request):
+    return render(request,'shazam/more.html')

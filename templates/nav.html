@@ -21,7 +21,7 @@
         <!-- Logged In -->
         {% if request.user.is_authenticated%}
         <div class="header__user">
-          <a href="profile.html">
+          <a href="{% url 'update-user' %}">
             <div class="avatar avatar--medium active">
               <img src="https://randomuser.me/api/portraits/men/37.jpg" />
             </div>
@@ -43,7 +43,7 @@
         {% endif %}
 
         <div class="dropdown-menu">
-          <a href="settings.html" class="dropdown-link"
+          <a href="{% url 'update-user' %}" class="dropdown-link"
             ><svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
               <title>tools</title>
               <path
@@ -64,6 +64,14 @@
             </svg>
             Logout</a
           >
+          <a href="{% url 'more' %}" class="dropdown-link"
+          ><svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+            <title>About</title>
+            <path d="M16 0c-8.837 0-16 7.163-16 16s7.163 16 16 16 16-7.163 16-16-7.163-16-16-16zM16 30c-7.72 0-14-6.28-14-14s6.28-14 14-14 14 6.28 14 14-6.28 14-14 14zM15 14c0.553 0 1-0.447 1-1v-2c0-0.553-0.447-1-1-1s-1 0.447-1 1v2c0 0.553 0.447 1 1 1zM15 21c0.553 0 1-0.447 1-1v-5c0-0.553-0.447-1-1-1s-1 0.447-1 1v5c0 0.553 0.447 1 1 1z"></path>
+          </svg>
+          
+          About</a
+        >
         </div>
       </nav>
     </div>
