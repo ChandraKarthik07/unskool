@@ -1,4 +1,6 @@
 {% extends 'main.html' %}
+
+{% load static %}
 {% block content %}
   <main class="profile-page layout layout--1">
     <div class="container">
@@ -8,8 +10,8 @@
       <div class="roomList">
         <div class="profile">
           <div class="profile__avatar">
-            <div class="avatar avatar--large active">
-              <img src="https://randomuser.me/api/portraits/men/11.jpg" />
+            <div class="avatar avatar--large">
+              <img src="  {% static 'images/developer.jpeg' %}" />
             </div>
           </div>
           <div class="profile__info">

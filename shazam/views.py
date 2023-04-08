@@ -1,12 +1,10 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from .models import Room,Topic,Message
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
+from .models import Room,Topic,Message,User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
-from .forms import Roomform,updateuser
+from .forms import Roomform,updateuser,MyUserCreationForm
 from django.db.models import Q
 
 # Create your views here.
@@ -110,12 +108,13 @@ def deletemsg(request,pk):
 def login_page(request):
     page="login"
     if request.method=="POST":
-        username=request.POST.get("username").lower()
+        username=request.POST.get("email").lower()
         password=request.POST.get("password")
+        print(username,password)
         try:
             username=User.objects.get(username=username)
         except:
-            messages.error(request, 'user not found')
+            messages.error(request, '')
         user=authenticate(request,username=username,password=password)
         print(type(user))
 
@@ -133,12 +132,12 @@ def logout_page(request):
     logout(request)
     return redirect('/')
 def signup(request):
-    form=UserCreationForm()
+    register=MyUserCreationForm()
     if request.method=="POST":
         #register=UserCreationForm(commit=False)
-        register=UserCreationForm(request.POST)
+        register=MyUserCreationForm(request.POST)
         if register.is_valid():
-            user=form.save(commit=False)
+            user=register.save(commit=False)
             user.username=user.username.lower()
             user.save()
             login(request,user)
@@ -146,14 +145,14 @@ def signup(request):
             return redirect('home')
         else:
             messages.error(request,"please register with valid details")
-    context={'form':form}
+    context={'register':register}
     return render(request,'shazam/login_page.html',context)
 @login_required(login_url='login_page')
 def updateUser(request):
     user=request.user
     form= updateuser(instance=user)
     if request.method == 'POST':
-        form=updateuser(request.POST,instance=user)
+        form=updateuser(request.POST,request.FILES,instance=user)
         if form.is_valid():
             form.save()
             return redirect('profile_page',pk=user.id)
