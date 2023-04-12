@@ -17,6 +17,7 @@ urlpatterns = [
     path('deletemsg/<int:pk>',views.deletemsg,name='deletemsg' ),
     path('update-user/',views.updateUser,name='update-user' ),
     path('more/',views.more,name='more' ),
+    path("followToggle/<str:author>/",views.followToggle, name="followToggle")
 
 
 

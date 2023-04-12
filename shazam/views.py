@@ -6,7 +6,8 @@ from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from .forms import Roomform,updateuser,MyUserCreationForm
 from django.db.models import Q
-
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 # Create your views here.
 l=[
     {'id':1, 'name':"learn python"},
@@ -32,6 +33,7 @@ def profile_page(request,pk):
     rooms=users.room_set.all()
     chatboxes=users.message_set.all()
     topics=Topic.objects.all()
+    
     context={'users':users,'rooms':rooms,'chatboxes':chatboxes,'topics':topics}
     return render (request,'shazam/profile_page.html',context)
 
@@ -84,6 +86,18 @@ def updateroom(request,pk):
         return redirect('/')
             
     return render(request,'shazam/roomform.html',{'room':update,'form':room,'topics':topics})
+def followToggle(request, author):
+    authorObj = User.objects.get(username=author)
+    currentUserObj = User.objects.get(username=request.user.username)
+    following = authorObj.following.all()
+
+    if author != currentUserObj.username:
+        if currentUserObj in following:
+            authorObj.following.remove(currentUserObj.id)
+        else:
+            authorObj.following.add(currentUserObj.id)
+
+    return HttpResponseRedirect(reverse(profile_page, args=[authorObj.id]))
 @login_required(login_url='login_page')
 
 def delete(request,pk):
