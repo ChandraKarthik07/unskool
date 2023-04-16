@@ -53,6 +53,16 @@ def room(request,pk):
         room.participants.add(request.user)
     context={'chatboxes':chatboxes,'room':room,'participants':participants}
     return render(request,'shazam/room.html',context)
+def communi(request):
+    k=request.GET.get("p") if request.GET.get('p')!=None else ''
+    l=request.GET.get("l") if request.GET.get('l')!=None else ''
+    users=User.objects.filter(Q(username__icontains=k)
+                             )
+    chatboxes=Message.objects.filter(Q(room__Topic__name__icontains=k)).order_by("-created")
+
+    users=User.objects.get(username=k)
+    context={'participants':users}
+    return render(request,'shazam/messages.html',context)
 @login_required(login_url='login_page')
 def createroom(request):
     room=Roomform()
