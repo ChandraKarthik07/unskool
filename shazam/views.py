@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from .models import Room,Topic,Message,User
+from .models import Room,Topic,Message,User,privatechat
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
@@ -53,16 +53,24 @@ def room(request,pk):
         room.participants.add(request.user)
     context={'chatboxes':chatboxes,'room':room,'participants':participants}
     return render(request,'shazam/room.html',context)
-def communi(request):
-    k=request.GET.get("p") if request.GET.get('p')!=None else ''
-    l=request.GET.get("l") if request.GET.get('l')!=None else ''
-    users=User.objects.filter(Q(username__icontains=k)
-                             )
-    chatboxes=Message.objects.filter(Q(room__Topic__name__icontains=k)).order_by("-created")
-
-    users=User.objects.get(username=k)
+def inbox(request,pk):
+    users=User.objects.get(id=pk)
     context={'participants':users}
     return render(request,'shazam/messages.html',context)
+def direct(request,pk):
+    user=User.objects.get(id=pk)
+    #chatboxes=user.privatechat__set.all().orderby('-updated')
+    chatboxes=privatechat.objects.filter(user=user,Host=request.user).order_by('-updated')
+    if request.method=="POST":
+        chat=privatechat.objects.create(user=user,
+                                    Host=request.user,
+                                    body=request.POST.get('body')
+                                    
+                                    )
+        return redirect('direct',pk=pk)
+    context={'chatboxes':chatboxes,'user':user}
+    
+    return render(request,'shazam/connections.html')
 @login_required(login_url='login_page')
 def createroom(request):
     room=Roomform()

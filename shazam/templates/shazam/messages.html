@@ -13,7 +13,7 @@
           <img src="{{user.avatar.url}}" />
         </div>
         <p>
-          {{user.name}} <a href="{% url 'communi' %}?l={{user.username}}">msg</a>
+          {{user.name}} <a href="{% url 'direct' user.id %}">msg</a>
           <span>@{{user.username}}</span>
         </p>
       </a>
@@ -21,9 +21,10 @@
     </div>
   </div>
   <!--  End -->
+  
 </div>
 </main>
-<script src="script.js"></script>
+
 {% endblock content %}
      <!--  End -->
     </div>

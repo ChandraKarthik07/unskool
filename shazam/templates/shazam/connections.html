@@ -53,11 +53,11 @@
                 
               </div>
               <div class="room__hosted">
-                <a href="{% url 'profile_page' room.Host.id %}" class="room__author">
+                <a href="{% url 'profile_page' user.id %}" class="room__author">
                   <div class="avatar avatar--small">
-                    <img src="{{room.Host.avatar.url}}" />
+                    <img src="{{user.avatar.url}}" />
                   </div>
-                  <span>{{room.Host.username}}</span>
+                  <span>{{user.username}}</span>
                   
                 </a>
               </div>
@@ -69,7 +69,6 @@
             <div class="room__conversation">
                 <div class="threads scroll">
       
-      
                   {% for chatbox in chatboxes %}
                   <div class="thread">
                     <div class="thread__top">
@@ -78,29 +77,18 @@
                           <div class="avatar avatar--small">
                             <img src="{{chatbox.user.avatar.url}}" />
                           </div>
-                          <span>@{{chatbox.user.username}}</span>
+                          <span>@{{chatbox.username}}</span>
                         </a>
-                        <span class="thread__date">{{chatbox.created|timesince}} ago</span>
+                        <span class="thread__date">{{chatboxes.created|timesince}} ago</span>
                       </div>
       
-                      {% if request.user == chatbox.user %}
-                      <a href="{% url 'deletemsg' chatbox.id %}">
-                        <div class="thread__delete">
-                          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-                            <title>remove</title>
-                            <path
-                              d="M27.314 6.019l-1.333-1.333-9.98 9.981-9.981-9.981-1.333 1.333 9.981 9.981-9.981 9.98 1.333 1.333 9.981-9.98 9.98 9.98 1.333-1.333-9.98-9.98 9.98-9.981z">
-                            </path>
-                          </svg>
-                        </div>
-                      </a>
-                      {% endif %}
+                      
                     </div>
                     <div class="thread__details">
                       {{chatbox.body}}
                     </div>
                   </div>
-                  {% endfor %}
+                  {% endfor%}
                 </div>
               </div>
       
@@ -114,25 +102,8 @@
           </div>
           <!-- Room End -->
       
-          <!--   Start -->
-          <div class="participants">
-            <h3 class="participants__top">connections <span>({{participants.count}} Joined)</span></h3>
-            <div class="participants__list scroll">
-              {% for user in participants %}
-              <a href="{%  url 'profile_page' user.id %}" class="participant">
-                <div class="avatar avatar--medium">
-                  <img src="{{user.avatar.url}}" />
-                </div>
-                <p>
-                  {{user.name}}
-                  <span>@{{user.username}}</span>
-                </p>
-              </a>
-              {% endfor %}
-            </div>
-          </div>
+          
           <!--  End -->
         </div>
       </main>
-      <script src="script.js"></script>
       {% endblock content %}
