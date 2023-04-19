@@ -9,6 +9,9 @@ urlpatterns = [
     path('profile_page/<str:pk>',views.profile_page,name='profile_page' ),
     path('inbox/<str:pk>',views.inbox,name='inbox'),
     path('direct/<str:pk>',views.direct,name='direct'),
+    path('deletechat/inbox/<str:pk>',views.direct,name='direct'),
+    path('deletechat/<str:pk>',views.deletechat,name='deletechat'),
+
 
     path('topics/',views.topics,name='topics' ),
     path('activity/',views.activity,name='activity' ),

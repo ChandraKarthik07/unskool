@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
+
 from .models import Room,Topic,Message,User,privatechat
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate,login,logout
@@ -8,6 +9,8 @@ from .forms import Roomform,updateuser,MyUserCreationForm
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.core import serializers
+
 # Create your views here.
 l=[
     {'id':1, 'name':"learn python"},
@@ -56,11 +59,11 @@ def room(request,pk):
 def inbox(request,pk):
     users=User.objects.get(id=pk)
     context={'participants':users}
-    return render(request,'shazam/messages.html',context)
+    return render(request,'shazam/chat.html',context)
 def direct(request,pk):
     user=User.objects.get(id=pk)
     #chatboxes=user.privatechat__set.all().orderby('-updated')
-    chatboxes=privatechat.objects.filter(user=user,Host=request.user).order_by('-updated')
+    
     if request.method=="POST":
         chat=privatechat.objects.create(user=user,
                                     Host=request.user,
@@ -68,9 +71,9 @@ def direct(request,pk):
                                     
                                     )
         return redirect('direct',pk=pk)
+    chatboxes = privatechat.objects.filter((Q(user=user) & Q(Host=request.user)) | (Q(user=request.user) & Q(Host=user))).order_by('updated')
     context={'chatboxes':chatboxes,'user':user}
-    
-    return render(request,'shazam/connections.html')
+    return render(request,'shazam/chat.html',context)
 @login_required(login_url='login_page')
 def createroom(request):
     room=Roomform()
@@ -136,6 +139,19 @@ def deletemsg(request,pk):
         return redirect('home')
   
     return render(request,'shazam/delete.html',{'obj':chatroom})
+
+@login_required(login_url='login_page')
+def deletechat(request,pk):
+    chatroom=privatechat.objects.get(id=pk)
+    if request.user!=chatroom.Host:
+        return HttpResponse("you are not allowed")
+    
+    chatroom.delete()
+    return redirect('inbox/'+str(chatroom.user.id))
+  
+    #return render(request,'shazam/delete.html',{'obj':chatroom})
+
+    
 
 def login_page(request):
     page="login"
