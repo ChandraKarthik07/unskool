@@ -72,7 +72,7 @@
             <div class="room__header scroll">
               <div class="room__info">
                 <h3>{{room.name}}</h3>
-            <span>{{room.created|timesince}} ago</span>
+            <span>{{room.created|timesince}}</span>
               </div>
               <div class="room__hosted">
                 <a href="{% url 'profile_page' user.id %}" class="room__author">
@@ -96,7 +96,7 @@
                   <div class="thread">
                     <div class="thread__top">
                       <div class="thread__author">
-                        <a href="{% url 'profile_page' request.user.id %}" class="thread__authorInfo">
+                        <a href="{% url 'profile_page' user.id %}" class="thread__authorInfo">
                           <div class="avatar avatar--small">
                             
                             <img src="{{request.user.avatar.url}}" />

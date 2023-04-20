@@ -62,6 +62,7 @@ def inbox(request,pk):
     return render(request,'shazam/chat.html',context)
 def direct(request,pk):
     user=User.objects.get(id=pk)
+    
     #chatboxes=user.privatechat__set.all().orderby('-updated')
     
     if request.method=="POST":
@@ -72,7 +73,7 @@ def direct(request,pk):
                                     )
         return redirect('direct',pk=pk)
     chatboxes = privatechat.objects.filter((Q(user=user) & Q(Host=request.user)) | (Q(user=request.user) & Q(Host=user))).order_by('updated')
-    context={'chatboxes':chatboxes,'user':user}
+    context={'chatboxes':chatboxes,'user':user,'participants':request.user}
     return render(request,'shazam/chat.html',context)
 @login_required(login_url='login_page')
 def createroom(request):
