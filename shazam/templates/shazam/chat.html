@@ -5,8 +5,27 @@
 <main class="layout layout--2">
   <div class="container">
     <!-- Topics Start -->
+    {% if request.user == participants  %}
     {% include 'shazam/connections.html' %}
     {% include 'shazam/messages.html' %}
+    {% else %}
+
+
+    <div class="roomList__header">
+      <div>
+        <h2>Study Rooms Hosted by {{participants.username}}
+        </h2>
+      </div>
+    </div>
+    {% include 'shazam/room_component.html' %}
+    
+    {% include 'shazam/messages.html' %}
+    
+    
+
+    
+    {% endif %}
+    
 
         
     

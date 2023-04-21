@@ -1,7 +1,7 @@
 
     <div class="participants">
 
-      <h3 class="participants__top">connections <span>({{participants.count}} people)</span></h3>
+      <h3 class="participants__top">your connections <span>({{participants.count}} people)</span></h3>
       <div class="participants__list scroll">
         {% for user in participants.following.all %}
         <a href="{%  url 'profile_page' user.id %}" class="participant">
