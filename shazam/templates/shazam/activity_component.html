@@ -2,6 +2,7 @@
     <div class="activities__header">
         <h2>Recent Activities</h2>
     </div>
+    <div class="participants__list scroll">
     {% for chatbox in chatboxes %}
     <div class="activities__box">
         <div class="activities__boxHeader roomListRoom__header">
@@ -30,9 +31,10 @@
 
         </div>
         <div class="activities__boxContent">
-            <p>replied to post “<a href="{% url 'room' chatbox.room.id %}">{{chatbox.room}}</a>”</p>
+            <p>replied to post <br><span>“<a href="{% url 'room' chatbox.room.id %}">{{chatbox.room}}</a>”</span></p>
             <div class="activities__boxRoomContent">{{chatbox.body}}</div>
         </div>
     </div>
     {% endfor %}
-
+</div>
+</div>
