@@ -25,8 +25,7 @@ SECRET_KEY = 'django-insecure-zmv-*g#edr+z+l88_viqk(^ox&#zhoth0+6@=2ekr6%#lgt$o+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["0.0.0.0","192.168.153.47",'127.0.0.1','192.168.132.47','192.168.95.47','192.168.179.47']
-
+ALLOWED_HOSTS=["*"]
 
 # Application definition
 
@@ -52,8 +51,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-  
+    'django.middleware.common.CommonMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
+  
+
 
 ROOT_URLCONF = 'unskool.urls'
 
@@ -105,7 +107,10 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
+# Security settings
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
