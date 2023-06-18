@@ -1,1 +1,1 @@
-web: gunicorn 'shazam.wsgi'
+web: gunicorn 'name-of-application.wsgi'
